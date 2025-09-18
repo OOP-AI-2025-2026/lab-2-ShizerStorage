@@ -3,44 +3,78 @@ package ua.opnu;
 
 public class TimeSpan {
 
-    // TODO: add class fields
+    int hours;
+    int minutes;
 
     TimeSpan(int hours, int minutes) {
-        // TODO: write constructor body
+        if (hours >= 0 && minutes >=0 && minutes <= 59) {
+            this.hours = hours;
+            this.minutes = minutes;
+        }
     }
 
     int getHours() {
-        return 0;
+        return this.hours;
     }
 
     int getMinutes() {
-        // TODO: write method body
-        return 0;
+        return this.minutes;
     }
 
     void add(int hours, int minutes) {
-        // TODO: write method body
+        if (hours < 0 || minutes < 0 || minutes > 59) {
+            return;
+        } else if (this.minutes + minutes >= 60) {
+            hours++;
+            this.minutes += minutes - 60;
+        } else {
+            this.minutes += minutes;
+        }
+        this.hours += hours;
     }
 
     void addTimeSpan(TimeSpan timespan) {
-        // TODO: write method body
+        this.hours += timespan.getHours();
+        this.minutes += timespan.getMinutes();
+        if (this.minutes >= 60) {
+            this.minutes -= 60;
+            this.hours ++;
+        }
     }
 
     double getTotalHours() {
-        // TODO: write method body
-        return 0;
+        return this.hours + (double)(this.minutes) / 60;
     }
 
     int getTotalMinutes() {
-        // TODO: write method body
-        return 0;
+        return this.hours * 60 + this.minutes;
     }
 
-    void subtract(TimeSpan span) {
-        // TODO: write method body
+    public void subtract(TimeSpan span) {
+        if (span == null) {
+            return;
+        }
+        int currentTotal = this.getTotalMinutes();
+        int subTotal = span.getTotalMinutes();
+        if (subTotal > currentTotal) {
+            return;
+        }
+        int result = currentTotal - subTotal;
+        this.hours = result / 60;
+        this.minutes = result % 60;
     }
 
-    void scale(int factor) {
-        // TODO: write method body
+    public void scale(int factor) {
+        if (factor <= 0) {
+            return;
+        }
+        int total = this.getTotalMinutes();
+        long scaled = (long) total * factor;
+        if (scaled > Integer.MAX_VALUE) {
+            return;
+        }
+        int newTotal = (int) scaled;
+        this.hours = newTotal / 60;
+        this.minutes = newTotal % 60;
     }
 }
